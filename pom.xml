@@ -31,14 +31,13 @@
   ~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.davidsoergel</groupId>
   <artifactId>conja</artifactId>
 
   <name>conja</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <url>http://dev.davidsoergel.com/conja</url>
   <description>Incredibly easy functional concurrency in Java</description>
 
@@ -58,8 +57,8 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.davidsoergel.com/repos/conja</connection>
-    <developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-ds/conja</developerConnection>
+    <connection>scm:svn:http://svn.davidsoergel.com/repos/conja/tags/conja-1.0</connection>
+    <developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-ds/conja/tags/conja-1.0</developerConnection>
   </scm>
 
   <distributionManagement>
