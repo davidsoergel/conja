@@ -1,6 +1,5 @@
 package com.davidsoergel.conja;
 
-import com.google.common.base.Function;
 import org.apache.log4j.Logger;
 
 import java.util.Iterator;
