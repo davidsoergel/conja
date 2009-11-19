@@ -7,6 +7,7 @@ import java.util.Iterator;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
+@Deprecated
 abstract class RunnableForEach<I> extends MappingIterator<I, Runnable>
 	{
 	protected RunnableForEach(final Iterator<I> i)
@@ -19,9 +20,9 @@ abstract class RunnableForEach<I> extends MappingIterator<I, Runnable>
 		super(it);
 		}
 
-	protected RunnableForEach(final NextOnlyIterator<I> i)
+	protected RunnableForEach(final ThreadSafeNextOnlyIterator<I> i)
 		{
-		super(new NextOnlyIteratorAsNormalIterator<I>(i));
+		super(new ThreadSafeNextOnlyIteratorAsNormalIterator<I>(i));
 		}
 
 	public Runnable function(final I i)

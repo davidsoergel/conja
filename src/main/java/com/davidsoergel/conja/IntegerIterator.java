@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public class IntegerIterator implements Iterator<Integer>
+public class IntegerIterator implements Iterator<Integer>, ThreadSafeNextOnlyIterator<Integer>
 	{
 	int trav;
 	final int maxExclusive;

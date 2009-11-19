@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public interface NextOnlyIterator<T>
+public interface ThreadSafeNextOnlyIterator<T>
 	{
 	/**
 	 * Returns the next object from the iterator.  Must be thread-safe, i.e. multiple threads should be able to poll

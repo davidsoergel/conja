@@ -9,11 +9,12 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public class NextOnlyIteratorAsNormalIterator<T> implements Iterator<T>
+@Deprecated
+public class ThreadSafeNextOnlyIteratorAsNormalIterator<T> implements Iterator<T>
 	{
-	NextOnlyIterator<T> it;
+	ThreadSafeNextOnlyIterator<T> it;
 
-	public NextOnlyIteratorAsNormalIterator(final NextOnlyIterator<T> it)
+	public ThreadSafeNextOnlyIteratorAsNormalIterator(final ThreadSafeNextOnlyIterator<T> it)
 		{
 		this.it = it;
 		}

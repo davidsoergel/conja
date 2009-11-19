@@ -20,12 +20,7 @@ public class Parallel
 
 // -------------------------- STATIC METHODS --------------------------
 
-	public static <T> void forEach(NextOnlyIterator<T> tasks, final Function<T, Void> function)
-		{
-		forEach(new NextOnlyIteratorAsNormalIterator<T>(tasks), function);
-		}
-
-	public static <T> void forEach(Iterator<T> tasks, final Function<T, Void> function)
+	public static <T> void forEach(ThreadSafeNextOnlyIterator<T> tasks, final Function<T, Void> function)
 		{
 		DepthFirstThreadPoolExecutor.getInstance().submitAndWaitForAll(new ForEach<T>(tasks)
 		{
@@ -34,6 +29,11 @@ public class Parallel
 			function.apply(o);
 			}
 		});
+		}
+
+	public static <T> void forEach(Iterator<T> tasks, final Function<T, Void> function)
+		{
+		forEach(new IteratorAsThreadSafeNextOnlyIterator<T>(tasks), function);
 		}
 
 	public static <T> void forEach(int repetitions, final Function<Integer, Void> function)
@@ -65,12 +65,7 @@ public class Parallel
 		forEach(tasks.iterator(), function);
 		}
 
-	public static <T, V> Map<T, V> map(NextOnlyIterator<T> tasks, final Function<T, V> function)
-		{
-		return map(new NextOnlyIteratorAsNormalIterator<T>(tasks), function);
-		}
-
-	public static <T, V> Map<T, V> map(Iterator<T> tasks, final Function<T, V> function)
+	public static <T, V> Map<T, V> map(ThreadSafeNextOnlyIterator<T> tasks, final Function<T, V> function)
 		{
 		final Map<T, V> result = new ConcurrentHashMap<T, V>();
 		DepthFirstThreadPoolExecutor.getInstance().submitAndWaitForAll(new ForEach<T>(tasks)
@@ -81,6 +76,11 @@ public class Parallel
 			}
 		});
 		return result;
+		}
+
+	public static <T, V> Map<T, V> map(Iterator<T> tasks, final Function<T, V> function)
+		{
+		return map(new IteratorAsThreadSafeNextOnlyIterator<T>(tasks), function);
 		}
 
 	public static <T, V> Map<T, V> map(Iterable<T> tasks, final Function<T, V> function)
@@ -104,14 +104,14 @@ public class Parallel
 		{
 // ------------------------------ FIELDS ------------------------------
 
-		Iterator<T> iter;
+		ThreadSafeNextOnlyIterator<T> iter;
 
 		boolean hasNext = true;
 
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-		public ForEach(final Iterator<T> tasks)
+		public ForEach(final ThreadSafeNextOnlyIterator<T> tasks)
 			{
 			iter = tasks;
 			}
@@ -135,7 +135,8 @@ public class Parallel
 				T o;
 				try
 					{
-					o = iter.next();
+					o =
+							iter.next();  // note this is usually synchronized on the underlying iterator (see IteratorAsThreadSafeNextOnlyIterator)
 					}
 				catch (NoSuchElementException e)
 					{
