@@ -135,8 +135,8 @@ public class Parallel
 				T o;
 				try
 					{
-					o =
-							iter.next();  // note this is usually synchronized on the underlying iterator (see IteratorAsThreadSafeNextOnlyIterator)
+					// note this is usually synchronized on the underlying iterator (see IteratorAsThreadSafeNextOnlyIterator)
+					o = iter.next();
 					}
 				catch (NoSuchElementException e)
 					{
@@ -152,8 +152,8 @@ public class Parallel
 
 				try
 					{
-					performAction(
-							o); // exceptions are thrown from DepthFirstThneadPoolIterator wrapped in RuntimeExecutionException and ExecutionException
+					performAction(o);
+					// exceptions are thrown from DepthFirstThreadPoolIterator wrapped in RuntimeExecutionException and ExecutionException
 					}
 				catch (OutOfMemoryError e)
 					{

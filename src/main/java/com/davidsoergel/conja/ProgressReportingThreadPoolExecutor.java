@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
+@Deprecated
 public class ProgressReportingThreadPoolExecutor extends ThreadPoolExecutor
 	{
 	private static final Logger logger = Logger.getLogger(ProgressReportingThreadPoolExecutor.class);
