@@ -18,7 +18,7 @@ class TaskGroup extends MappingIterator<Runnable, ComparableFutureTask> //implem
 
 	private final Set<ComparableFutureTask> futuresDoneAwaitingResultCollection = new HashSet<ComparableFutureTask>();
 
-	public final static ThreadLocal<int[]> _currentTaskPriority = new ThreadLocal<int[]>();
+	public static final ThreadLocal<int[]> _currentTaskPriority = new ThreadLocal<int[]>();
 
 	private int[] currentTaskPriority;
 	private int subPriority = 0;  // start the first task with the best priority
@@ -120,8 +120,16 @@ class TaskGroup extends MappingIterator<Runnable, ComparableFutureTask> //implem
 	 */
 	private static int[] arrayAppend(final int[] currentTaskPriority, final int subPriority)
 		{
-		int[] result = Arrays.copyOf(currentTaskPriority, currentTaskPriority.length + 1);
-		result[currentTaskPriority.length] = subPriority;
+		int[] result;
+		if (currentTaskPriority == null)
+			{
+			result = new int[]{subPriority};
+			}
+		else
+			{
+			result = Arrays.copyOf(currentTaskPriority, currentTaskPriority.length + 1);
+			result[currentTaskPriority.length] = subPriority;
+			}
 		return result;
 		}
 
