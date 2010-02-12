@@ -102,12 +102,15 @@ class TaskGroup extends MappingIterator<Runnable, ComparableFutureTask> //implem
 		{
 		assert isDone();
 
-		Iterator<ComparableFutureTask> futuresDoneIterator = futuresDoneAwaitingResultCollection.iterator();
-		while (futuresDoneIterator.hasNext())
+		synchronized (futuresDoneAwaitingResultCollection)
 			{
-			FutureTask future = futuresDoneIterator.next();
-			future.get();
-			futuresDoneIterator.remove();
+			Iterator<ComparableFutureTask> futuresDoneIterator = futuresDoneAwaitingResultCollection.iterator();
+			while (futuresDoneIterator.hasNext())
+				{
+				FutureTask future = futuresDoneIterator.next();
+				future.get();
+				futuresDoneIterator.remove();
+				}
 			}
 		}
 
@@ -192,7 +195,10 @@ class TaskGroup extends MappingIterator<Runnable, ComparableFutureTask> //implem
 				{
 				throw new ThreadingException("Can't report a task complete on the wrong TaskGroup");
 				}
-			futuresDoneAwaitingResultCollection.add(task);
+			synchronized (futuresDoneAwaitingResultCollection)
+				{
+				futuresDoneAwaitingResultCollection.add(task);
+				}
 			outstandingTasks.release();
 			}
 		}
