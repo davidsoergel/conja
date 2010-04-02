@@ -104,6 +104,24 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 
 		// ** unbounded queue
 		//underlyingExecutor.setRejectedExecutionHandler(new CallerRunsFromQueuePolicy());  // throttle requests on full queue
+
+
+		Thread shutdownHook = new Thread()
+		{
+		public void run()
+			{
+			logger.debug("Abruptly terminating thread pool...");
+			try
+				{
+				shutdownNow();
+				}
+			catch (Exception e)
+				{
+				logger.error("Error", e);
+				}
+			}
+		};
+		Runtime.getRuntime().addShutdownHook(shutdownHook);
 		}
 
 	/**
