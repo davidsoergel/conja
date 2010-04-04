@@ -37,7 +37,7 @@
   <artifactId>conja</artifactId>
 
   <name>conja</name>
-  <version>1.03-SNAPSHOT</version>
+  <version>1.03</version>
   <url>http://dev.davidsoergel.com/conja</url>
   <description>Incredibly easy functional concurrency in Java</description>
 
@@ -57,8 +57,8 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.davidsoergel.com/repos/conja</connection>
-    <developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-ds/conja</developerConnection>
+    <connection>scm:svn:http://svn.davidsoergel.com/repos/conja/tags/conja-1.03</connection>
+    <developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-ds/conja/tags/conja-1.03</developerConnection>
   </scm>
 
   <distributionManagement>
