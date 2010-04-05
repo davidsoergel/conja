@@ -105,7 +105,8 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 		// ** unbounded queue
 		//underlyingExecutor.setRejectedExecutionHandler(new CallerRunsFromQueuePolicy());  // throttle requests on full queue
 
-
+		/* This causes a deadlock; but how else do we shut down the threads??
+		Under normal circumstances the main thread should call Parallel.shutdown() in a finally block, but what about abnormal circumstances?
 		Thread shutdownHook = new Thread()
 		{
 		public void run()
@@ -122,6 +123,7 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 			}
 		};
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
+		*/
 		}
 
 	/**
