@@ -1,5 +1,7 @@
 package com.davidsoergel.conja;
 
+import org.apache.log4j.Logger;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,6 +16,8 @@ import java.util.concurrent.Semaphore;
  */
 class TaskGroup extends MappingIterator<Runnable, ComparableFutureTask> //implements Iterator<FutureTask>  // could be
 	{
+	private static final Logger logger = Logger.getLogger(TaskGroup.class);
+
 	private final Set<ComparableFutureTask> futuresEnqueued = new HashSet<ComparableFutureTask>();
 
 	private final Set<ComparableFutureTask> futuresDoneAwaitingResultCollection = new HashSet<ComparableFutureTask>();
@@ -102,15 +106,24 @@ class TaskGroup extends MappingIterator<Runnable, ComparableFutureTask> //implem
 		{
 		assert isDone();
 
-		synchronized (futuresDoneAwaitingResultCollection)
+		try
 			{
-			Iterator<ComparableFutureTask> futuresDoneIterator = futuresDoneAwaitingResultCollection.iterator();
-			while (futuresDoneIterator.hasNext())
+			logger.debug("Trying to get all exceptions from task group...");
+			synchronized (futuresDoneAwaitingResultCollection)
 				{
-				FutureTask future = futuresDoneIterator.next();
-				future.get();
-				futuresDoneIterator.remove();
+				logger.debug("     Successfully synchronized on futuresDoneAwaitingResultCollection");
+				Iterator<ComparableFutureTask> futuresDoneIterator = futuresDoneAwaitingResultCollection.iterator();
+				while (futuresDoneIterator.hasNext())
+					{
+					FutureTask future = futuresDoneIterator.next();
+					future.get();
+					futuresDoneIterator.remove();
+					}
 				}
+			}
+		finally
+			{
+			logger.debug("     Finished collecting exceptions");
 			}
 		}
 
@@ -195,10 +208,13 @@ class TaskGroup extends MappingIterator<Runnable, ComparableFutureTask> //implem
 				{
 				throw new ThreadingException("Can't report a task complete on the wrong TaskGroup");
 				}
+			logger.debug("Adding task to futuresDoneAwaitingResultCollection");
 			synchronized (futuresDoneAwaitingResultCollection)
 				{
+				logger.debug("     Successfully synchronized on futuresDoneAwaitingResultCollection");
 				futuresDoneAwaitingResultCollection.add(task);
 				}
+			logger.debug("     Added task to futuresDoneAwaitingResultCollection");
 			outstandingTasks.release();
 			}
 		}

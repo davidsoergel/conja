@@ -96,14 +96,33 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 		                                            new PriorityBlockingQueue<Runnable>(),
 		                                            threadFactory);  // new LinkedBlockingQueue()); //
 		//		queueCount = new Semaphore(queueSize);
-		underlyingExecutor
-				.prestartAllCoreThreads();  // this ensures that new tasks get queued rather than being executed immediately, so the queue has the opportunity to proioritize them
+
+
+		// this ensures that new tasks get queued rather than being executed immediately, so the queue has the opportunity to prioritize them
+		underlyingExecutor.prestartAllCoreThreads();
 
 		// don't use CallerRunsPolicy, since we'll often end up with CPUs + 1 threads that way.
 		// instead we'll just block in execute() below
 
 		// ** unbounded queue
 		//underlyingExecutor.setRejectedExecutionHandler(new CallerRunsFromQueuePolicy());  // throttle requests on full queue
+
+		/*
+		Because we've made a fixed-size thread pool with no timeout, for legitimate reasons above, it will not terminate unless told to do so.
+
+		From the ThreadPoolExecutor JavaDocs:
+
+		A pool that is no longer referenced in a program AND has no remaining threads will be shutdown automatically.
+		If you would like to ensure that unreferenced pools are reclaimed even if users forget to call shutdown(),
+		then you must arrange that unused threads eventually die, by setting appropriate keep-alive times,
+		using a lower bound of zero core threads and/or setting allowCoreThreadTimeOut(boolean).
+
+		Since we cannot make those arrangements here, it's absolutely required to call shutdown();
+		otherwise the pool threads will wait even after the main thread has terminated.
+
+		Thus, the client main method should call Parallel.shutdown() in a finally block.
+
+		 */
 
 		/* This causes a deadlock; but how else do we shut down the threads??
 		Under normal circumstances the main thread should call Parallel.shutdown() in a finally block, but what about abnormal circumstances?
