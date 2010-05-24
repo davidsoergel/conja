@@ -124,16 +124,21 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 
 		 */
 
-		/* This causes a deadlock; but how else do we shut down the threads??
+		/* I was worried that this causes a deadlock.  Does it?
+		  but how else do we shut down the threads??
 		Under normal circumstances the main thread should call Parallel.shutdown() in a finally block, but what about abnormal circumstances?
+		*/
 		Thread shutdownHook = new Thread()
 		{
 		public void run()
 			{
-			logger.debug("Abruptly terminating thread pool...");
+			//logger.debug("Abruptly terminating thread pool...");
+			logger.debug(
+					"Terminating thread pool due to program shutdown (outstanding tasks will be completed first).");
 			try
 				{
-				shutdownNow();
+				//shutdownNow();
+				shutdown();
 				}
 			catch (Exception e)
 				{
@@ -142,7 +147,6 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 			}
 		};
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
-		*/
 		}
 
 	/**
@@ -624,6 +628,9 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 		else
 			{
 			//underlyingExecutor.beforeExecute(task, getThread());
+			// PERF we could monitor memory here.
+			// In fact, we could track memory requested by each task, so as not to run out later
+			// just because the currently running tasks haven't allocated it yet
 			task.run();
 			//afterExecute
 			//	task.done();
