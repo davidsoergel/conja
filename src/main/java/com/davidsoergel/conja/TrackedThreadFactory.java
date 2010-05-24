@@ -35,10 +35,13 @@ class TrackedThreadFactory implements ThreadFactory
 	public Thread newThread(Runnable r)
 		{
 		Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-		if (t.isDaemon())
+		// ** I have no idea why I previously wanted to ensure that these threads are user threads.
+/*		if (t.isDaemon())
 			{
 			t.setDaemon(false);
-			}
+			}*/
+		// ** clearly they should be daemon threads!
+		t.setDaemon(true);
 		if (t.getPriority() != Thread.NORM_PRIORITY)
 			{
 			t.setPriority(Thread.NORM_PRIORITY);

@@ -128,6 +128,7 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 		  but how else do we shut down the threads??
 		Under normal circumstances the main thread should call Parallel.shutdown() in a finally block, but what about abnormal circumstances?
 		*/
+		/* Oh, I see: we'll just make the workers daemon threads at TrackedThreadFactory:44
 		Thread shutdownHook = new Thread()
 		{
 		public void run()
@@ -147,6 +148,7 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 			}
 		};
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
+		*/
 		}
 
 	/**
