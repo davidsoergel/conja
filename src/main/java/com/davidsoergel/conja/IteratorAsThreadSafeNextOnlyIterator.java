@@ -1,6 +1,6 @@
 package com.davidsoergel.conja;
 
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -21,7 +21,8 @@ public class IteratorAsThreadSafeNextOnlyIterator<T> implements ThreadSafeNextOn
 		this.iter = iter;
 		}
 
-	@NotNull
+//	@NotNull
+
 	public T next() throws NoSuchElementException
 		{
 		synchronized (iter)
