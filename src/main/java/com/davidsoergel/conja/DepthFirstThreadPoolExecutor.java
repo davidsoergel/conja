@@ -30,6 +30,11 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 		return _instance;
 		}
 
+	public static boolean hasInstance()
+		{
+		return _instance != null;
+		}
+
 	public static void set_instance_cpus(final int _instance_cpus)
 		{
 		DepthFirstThreadPoolExecutor._instance_cpus = _instance_cpus;
@@ -353,7 +358,6 @@ public class DepthFirstThreadPoolExecutor implements TreeExecutorService
 		{
 		submitAndWaitForAll(tasks.iterator());
 		}
-
 
 	public ThreadPoolPerformanceStats shutdown()
 		{
