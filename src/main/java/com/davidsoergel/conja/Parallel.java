@@ -54,7 +54,8 @@ public class Parallel
 		forEach(threads, function);
 		}
 
-	public static void emergencyAbort() //OutOfMemoryError e)
+	//OutOfMemoryError e)
+	public static void emergencyAbort()
 		{
 		DepthFirstThreadPoolExecutor.getInstance().shutdownNow();
 		//throw e;
@@ -78,6 +79,27 @@ public class Parallel
 		return result;
 		}
 
+	public static <T, V> ThreadSafeNextOnlyIterator<V> mapStream(ThreadSafeNextOnlyIterator<T> tasks,
+	                                                             final Function<T, V> function)
+		{
+		// the idea is to return an Iterator that provides the mapped results in the proper order.
+		// Since the tasks may complete out of order, we need a cache of some size to collect the results
+
+		// actually this will require some voodoo; punt for now
+
+		/*
+		final Map<Integer, V> result = new ConcurrentHashMap<Integer, V>();
+		DepthFirstThreadPoolExecutor.getInstance().submitAndWaitForAll(new ForEach<T>(tasks)
+		{
+		public void performAction(final T o)
+			{
+			result.put(o, function.apply(o));
+			}
+		});
+		return result;*/
+		throw new UnsupportedOperationException();
+		}
+
 	public static <T, V> Map<T, V> map(Iterator<T> tasks, final Function<T, V> function)
 		{
 		return map(new IteratorAsThreadSafeNextOnlyIterator<T>(tasks), function);
@@ -89,10 +111,17 @@ public class Parallel
 		}
 
 
-	public static void shutdown()
+	public static ThreadPoolPerformanceStats shutdown()
 		{
-		logger.warn("Shutting down Parallel thread pool");
-		DepthFirstThreadPoolExecutor.getInstance().shutdown();
+		if (DepthFirstThreadPoolExecutor.hasInstance())
+			{
+			logger.warn("Shutting down Parallel thread pool");
+			return DepthFirstThreadPoolExecutor.getInstance().shutdown();
+			}
+		else
+			{
+			return null;
+			}
 		}
 
 // -------------------------- INNER CLASSES --------------------------
