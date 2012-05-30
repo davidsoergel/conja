@@ -33,67 +33,60 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.davidsoergel</groupId>
-  <artifactId>conja</artifactId>
-
-  <name>conja</name>
-  <version>1.06-SNAPSHOT</version>
-  <url>http://dev.davidsoergel.com/conja</url>
-  <description>Incredibly easy functional concurrency in Java</description>
-
-  <parent>
+    <modelVersion>4.0.0</modelVersion>
     <groupId>com.davidsoergel</groupId>
-    <artifactId>basepom</artifactId>
-    <version>0.95</version>
-  </parent>
+    <artifactId>conja</artifactId>
 
-  <inceptionYear>2006</inceptionYear>
+    <name>conja</name>
+    <version>1.06-SNAPSHOT</version>
+    <url>http://dev.davidsoergel.com/conja</url>
+    <description>Incredibly easy functional concurrency in Java</description>
 
-  <packaging>jar</packaging>
+    <parent>
+        <groupId>com.davidsoergel</groupId>
+        <artifactId>basepom</artifactId>
+        <version>0.98</version>
+    </parent>
 
-  <issueManagement>
-    <system>Trac</system>
-    <url>http://dev.davidsoergel.com/conja/</url>
-  </issueManagement>
+    <inceptionYear>2006</inceptionYear>
 
-  <scm>
-    <connection>scm:svn:http://svn.davidsoergel.com/repos/conja</connection>
-    <developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-ds/conja</developerConnection>
-  </scm>
+    <packaging>jar</packaging>
 
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>scpexe://jenkins@dev.davidsoergel.com/home/build/mavensites/conja</url>
-    </site>
-  </distributionManagement>
+    <issueManagement>
+        <system>Trac</system>
+        <url>http://dev.davidsoergel.com/conja/</url>
+    </issueManagement>
 
+    <scm>
+        <connection>scm:svn:http://svn.davidsoergel.com/repos/conja</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-ds/conja</developerConnection>
+    </scm>
 
-  <repositories>
-    <repository>
-      <id>central</id>
-      <url>http://dev.davidsoergel.com/artifactory/repo</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>snapshots</id>
-      <url>http://dev.davidsoergel.com/artifactory/repo</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-  </repositories>
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>scpexe://jenkins@dev.davidsoergel.com/home/build/mavensites/conja</url>
+        </site>
+    </distributionManagement>
 
-  <!--  <dependencies>
-      <dependency>
-        <groupId>com.google.collections</groupId>
-        <artifactId>google-collections</artifactId>
-        <version>1.0-rc2</version>
-        <scope>compile</scope>
-      </dependency>
-    </dependencies> -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>dev.davidsoergel.com</id>
+            <url>http://dev.davidsoergel.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <!--  <dependencies>
+     <dependency>
+       <groupId>com.google.collections</groupId>
+       <artifactId>google-collections</artifactId>
+       <version>1.0-rc2</version>
+       <scope>compile</scope>
+     </dependency>
+   </dependencies> -->
 
 </project>
