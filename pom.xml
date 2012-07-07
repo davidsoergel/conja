@@ -35,7 +35,7 @@
 	<groupId>com.davidsoergel</groupId>
 	<artifactId>conja</artifactId>
 	<name>conja</name>
-	<version>1.06-SNAPSHOT</version>
+	<version>1.06</version>
 	<url>http://dev.davidsoergel.com/conja</url>
 	<description>Incredibly easy functional concurrency in Java</description>
 	<parent>
