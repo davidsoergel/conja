@@ -49,10 +49,11 @@
 		<system>Trac</system>
 		<url>http://dev.davidsoergel.com/conja/</url>
 	</issueManagement>
-	<scm>
-		<connection>scm:svn:http://svn.davidsoergel.com/repos/conja</connection>
-		<developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-ds/conja</developerConnection>
-	</scm>
+    <scm>
+        <connection>scm:hg:https://hg.davidsoergel.com/conja</connection>
+        <developerConnection>scm:hg:ssh://dev.davidsoergel.com//home/hg/conja</developerConnection>
+        <url>http://hg.davidsoergel.com/conja</url>
+    </scm>
 	<distributionManagement>
 		<site>
 			<id>website</id>
