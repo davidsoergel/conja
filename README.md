@@ -119,7 +119,7 @@ Conja helps to avoid a number of antipatterns in concurrent programming:
 
 We'll illustrate points with diagrams like this:
 
-![Legend](conjaKey.png)
+![Legend](docs/conjaKey.png)
 
 ----
 
