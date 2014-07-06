@@ -11,7 +11,7 @@ What it's not
 Conja is not a JVM-based functional language like [Scala](http://www.scala-lang.org/) or [Clojure](http://clojure.org/); those are cool and all, but here we just want to make concurrent computation easy and efficient in pure Java.  Also, Conja does not provide distributed computation like [Hadoop](http://hadoop.apache.org/) or [Hazelcast](http://www.hazelcast.com/); it just exploits multiple cores on one machine, with no configuration and minimal code changes.  It has some of the same goals that Grand Central Dispatch aka [libdispatch](http://libdispatch.macosforge.org/) does for C-family languages, but Conja does not depend on kernel support or native libraries.  Also, where GCD and some other concurrency libraries use FIFO queues to schedule tasks, Conja can substantially reduce the memory requirements of your program through a prioritized task scheduling approach.
 
 Overview
---------
+========
 
 ### Concurrent for-each
 
@@ -106,7 +106,7 @@ The only external dependency is on log4j, so if you don't use Maven, you'll need
 
 
 Principles of Operation
------------------------
+=======================
 
 Conja helps to avoid a number of antipatterns in concurrent programming:
 
@@ -123,7 +123,7 @@ We'll illustrate points with diagrams like this:
 
 
 Conflicts between incorrectly synchronized threads
-==================================================
+--------------------------------------------------
 
 ### Antipattern
 
@@ -133,10 +133,9 @@ When different threads try to modify the same object, then either there is a rac
 
 Conja encourages a functional style, in which concurrent tasks do not have "side effects".  Their only inputs are provided at the outset, and their only outputs are stored when the task completes.  Conja handles the synchronization issues for the task inputs and outputs, so as long as you avoid side effects, you never need to worry about synchronizing anything.
 
-----
 
 Nested concurrency and proliferation of threads
-===============================================
+-----------------------------------------------
 
 ### Antipattern
 
@@ -154,7 +153,7 @@ The user needn't be concerned about the thread pool at all, since Conja provides
 
 
 Suboptimal scheduling of nested tasks on the thread pool
-========================================================
+--------------------------------------------------------
 
 ### Antipattern
 
@@ -169,7 +168,7 @@ Conja internally prioritizes tasks to be executed based on depth-first ordering 
 [[Image(conjaFig3.png)]]
 
 Proliferation of pending tasks
-==============================
+------------------------------
 
 ### Antipattern
 
@@ -180,7 +179,7 @@ In Java, placing tasks in a queue for execution requires instantiating a {{{Runn
 Conja provides just-in-time instantiation of the {{{Runnable}}} objects to be executed.  That is, it keeps a small number of {{{Runnable}}} objects in the execution queue (just enough to keep the worker threads busy), and doesn't call {{{next()}}} on the input iterator to construct a new {{{Runnable}}} until there's space in the queue (i.e., when it's nearly time to execute the task).  This is again a "streaming" approach that avoids using lots of memory for pending tasks, and is especially useful if the input {{{Iterator}}} is itself a streaming kind of thing (i.e., if it reads a large data set from disk that doesn't fit in memory).
 
 Expensive task construction
-===========================
+---------------------------
 
 ### Antipattern
 
