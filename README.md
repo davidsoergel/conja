@@ -60,14 +60,13 @@ These constructs work on `Iterator`s or `Iterable`s (e.g. any `Collection`); the
 
 ### Nested concurrent calls work fine
 
-What if the `doSomething()` method itself performs a `Parallel.forEach()` somewhere inside it?  That's no problem at all, and is in fact encouraged.  Conja handles nested concurrency gracefully; the same worker threads are used on each call, so there is no proliferation of threads.  Conja internally prioritizes tasks to be executed based on depth-first ordering of the entire call tree, so that subtasks contributing to an earlier high-level task always preempt later high-level tasks and their subtasks.  Basically this means that it tries to finish one whole batch of tasks before starting (or continuing) on the next batch.  In fact, Conja does not even ''instantiate'' tasks (e.g., by calling `next()` on the task iterator) until near their execution time.  In combination these strategies help to conserve memory (or conversely, they help avoid out-of-memory errors for large computations).  (See [wiki:PrinciplesOfOperation Principles of Operation] for more details.)
+What if the `doSomething()` method itself performs a `Parallel.forEach()` somewhere inside it?  That's no problem at all, and is in fact encouraged.  Conja handles nested concurrency gracefully; the same worker threads are used on each call, so there is no proliferation of threads.  Conja internally prioritizes tasks to be executed based on depth-first ordering of the entire call tree, so that subtasks contributing to an earlier high-level task always preempt later high-level tasks and their subtasks.  Basically this means that it tries to finish one whole batch of tasks before starting (or continuing) on the next batch.  In fact, Conja does not even _instantiate_ tasks (e.g., by calling `next()` on the task iterator) until near their execution time.  In combination these strategies help to conserve memory (or conversely, they help avoid out-of-memory errors for large computations).  (See [wiki:PrinciplesOfOperation Principles of Operation] for more details.)
 
 
 Documentation
 -------------
 
  * [API docs](http://davidsoergel.github.io/conja/)
- * [Principles of Operation](wiki:PrinciplesOfOperation)
 
 Download
 --------
@@ -139,7 +138,7 @@ Nested concurrency and proliferation of threads
 
 ### Antipattern
 
-When you want to spawn a bunch of concurrent tasks, the first step is usually to make a thread pool on which to execute those tasks, e.g. via [http://java.sun.com/javase/6/docs/api/java/util/concurrent/Executors.html#newFixedThreadPool(int) Executors.newFixedThreadPool() ].  But if we're already in a concurrent task (on a worker thread) and do this for the sub-tasks, then we rapidly get gazillions of threads competing for resources (most dramatically if the concurrent calls are recursive).  This can easily produce out-of-memory errors, and degrades performance due to excessive context switching.
+When you want to spawn a bunch of concurrent tasks, the first step is usually to make a thread pool on which to execute those tasks, e.g. via [Executors.newFixedThreadPool()](http://java.sun.com/javase/6/docs/api/java/util/concurrent/Executors.html#newFixedThreadPool(int)).  But if we're already in a concurrent task (on a worker thread) and do this for the sub-tasks, then we rapidly get gazillions of threads competing for resources (most dramatically if the concurrent calls are recursive).  This can easily produce out-of-memory errors, and degrades performance due to excessive context switching.
 
 ![Figure 1](docs/conjaFig1.png)
 
@@ -149,7 +148,7 @@ Finally, note that a piece of code that wants to enqueue a bunch of parallel tas
 
 ### Conja solution
 
-The user needn't be concerned about the thread pool at all, since Conja provides higher-level abstractions as static methods in [http://dev.davidsoergel.com/maven/conja/apidocs/com/davidsoergel/conja/Parallel.html Parallel].  Under the hood, Conja manages a singleton thread pool, initialized by default to the number of available cores.   Scheduling on the pool is depth-first and lazy (see below). While a thread is waiting for a batch of subtasks, the thread itself is available to execute those tasks (or any other tasks with a higher priority), avoiding deadlock due to insufficient threads.
+The user needn't be concerned about the thread pool at all, since Conja provides higher-level abstractions as static methods in [Parallel](http://davidsoergel.github.io/conja/com/davidsoergel/conja/Parallel.html).  Under the hood, Conja manages a singleton thread pool, initialized by default to the number of available cores.   Scheduling on the pool is depth-first and lazy (see below). While a thread is waiting for a batch of subtasks, the thread itself is available to execute those tasks (or any other tasks with a higher priority), avoiding deadlock due to insufficient threads.
 
 
 Suboptimal scheduling of nested tasks on the thread pool
@@ -189,7 +188,7 @@ In some cases, the task inputs may come not from a simple Collection but from so
 
 ### Conja solution
 
-In Conja, the `next()` call itself is done from each worker thread, not on some producer thread.  Normally the call is synchronized on the iterator itself; in the case of an expensive `next()`, this just reconstitutes the bottleneck.  However, the `Parallel.forEach()` and `Parallel.map()` methods also accept a [http://dev.davidsoergel.com/maven/conja/apidocs/com/davidsoergel/conja/ThreadSafeNextOnlyIterator.html ThreadSafeNextOnlyIterator] instead of a regular Iterator.  If you want to provide an iterator with an expensive next() operation, just implement that interface and ensure that the next() call is thread-safe.
+In Conja, the `next()` call itself is done from each worker thread, not on some producer thread.  Normally the call is synchronized on the iterator itself; in the case of an expensive `next()`, this just reconstitutes the bottleneck.  However, the `Parallel.forEach()` and `Parallel.map()` methods also accept a [ThreadSafeNextOnlyIterator](http://davidsoergel.github.io/conja/com/davidsoergel/conja/ThreadSafeNextOnlyIterator.html) instead of a regular Iterator.  If you want to provide an iterator with an expensive next() operation, just implement that interface and ensure that the next() call is thread-safe.
 
-A common case is the [http://dev.davidsoergel.com/maven/conja/apidocs/com/davidsoergel/conja/MappingThreadSafeNextOnlyIterator.html MappingThreadSafeNextOnlyIterator], which applies some function to each element from an underlying iterator.  In this case the call to the underlying iterator may need to be synchronized, but the mapping function (which is likely the expensive part anyway) can be executed in parallel.
+A common case is the [MappingThreadSafeNextOnlyIterator](http://davidsoergel.github.io/conja/com/davidsoergel/conja/MappingThreadSafeNextOnlyIterator.html), which applies some function to each element from an underlying iterator.  In this case the call to the underlying iterator may need to be synchronized, but the mapping function (which is likely the expensive part anyway) can be executed in parallel.
 
