@@ -38,7 +38,7 @@ Parallel.forEach(someCollection, new Function<T, Void>() {
 ```
 
 
-As with any concurrent computation, the individual tasks should ideally have no side effects; if you follow this functional style then you don't ever need to think about thread synchronization, because the `Parallel` construct deals with it for you.  If you do want to change some external state from within each task, just make sure that the updates are thread-safe (e.g. if you're adding items to a `Set` use a `ConcurrentSkipListSet` rather than a regular `HashSet`).  It's OK to reference variables from the surrounding scope, but they must of course be `final`
+As with any concurrent computation, the individual tasks should ideally have no side effects; if you follow this functional style then you don't ever need to think about thread synchronization, because the `Parallel` construct deals with it for you.  If you do want to change some external state from within each task, just make sure that the updates are thread-safe (e.g. if you're adding items to a `Set` use a `ConcurrentSkipListSet` rather than a regular `HashSet`).  It's OK to reference variables from the surrounding scope, but they must of course be `final`.
 
 
 ### Mapping through a function
@@ -60,7 +60,7 @@ These constructs work on `Iterator`s or `Iterable`s (e.g. any `Collection`); the
 
 ### Nested concurrent calls work fine
 
-What if the `doSomething()` method itself performs a `Parallel.forEach()` somewhere inside it?  That's no problem at all, and is in fact encouraged.  Conja handles nested concurrency gracefully; the same worker threads are used on each call, so there is no proliferation of threads.  Conja internally prioritizes tasks to be executed based on depth-first ordering of the entire call tree, so that subtasks contributing to an earlier high-level task always preempt later high-level tasks and their subtasks.  Basically this means that it tries to finish one whole batch of tasks before starting (or continuing) on the next batch.  In fact, Conja does not even _instantiate_ tasks (e.g., by calling `next()` on the task iterator) until near their execution time.  In combination these strategies help to conserve memory (or conversely, they help avoid out-of-memory errors for large computations).  (See [wiki:PrinciplesOfOperation Principles of Operation] for more details.)
+What if the `doSomething()` method itself performs a `Parallel.forEach()` somewhere inside it?  That's no problem at all, and is in fact encouraged.  Conja handles nested concurrency gracefully; the same worker threads are used on each call, so there is no proliferation of threads.  Conja internally prioritizes tasks to be executed based on depth-first ordering of the entire call tree, so that subtasks contributing to an earlier high-level task always preempt later high-level tasks and their subtasks.  Basically this means that it tries to finish one whole batch of tasks before starting (or continuing) on the next batch.  In fact, Conja does not even _instantiate_ tasks (e.g., by calling `next()` on the task iterator) until near their execution time.  In combination these strategies help to conserve memory (or conversely, they help avoid out-of-memory errors for large computations).  (See [Principles of Operation](#principles-of-operation) for more details.)
 
 
 Documentation
